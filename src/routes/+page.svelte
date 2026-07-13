@@ -10,7 +10,7 @@
 	let todos: Todo[] = [
 		{ text: 'Learn Ionic components', done: true },
 		{ text: 'Bind state with Svelte', done: false },
-		{ text: 'Fetch real data from an API', done: false }
+		{ text: 'Fetch data from an API', done: false }
 	];
 	let newTodo = '';
 	let toastMessage = '';
@@ -33,10 +33,6 @@
 		toastMessage = `Removed "${todos[index].text}"`;
 		todos = todos.filter((_, i) => i !== index);
 		showToast = true;
-	}
-
-	function onSectionChange(e: CustomEvent) {
-		section = e.detail.value;
 	}
 
 	$: remaining = todos.filter((t) => !t.done).length;
@@ -70,7 +66,7 @@
 		gradesError = '';
 		try {
 			graduationGrade = (await universisFetch('students/me')).graduationGrade;
-			console.log('Graduation grade:', graduationGrade);
+			// console.log('Graduation grade:', graduationGrade);
 
 			const result = await universisFetch('students/me/courses');
 			// console.log(result.value);
@@ -93,7 +89,7 @@
 		<ion-title>Aristomate Demo</ion-title>
 	</ion-toolbar>
 	<ion-toolbar>
-		<ion-segment value={section} on:ionChange={onSectionChange}>
+		<ion-segment value={section} on:ionChange={(e) => section = e.detail.value}>
 			<ion-segment-button value="basics">
 				<ion-label>Basics</ion-label>
 			</ion-segment-button>

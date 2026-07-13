@@ -1,4 +1,4 @@
-<script>
+(<script>
 	import { universisFetch } from '$lib/universis_fetch';
 
 	let section = "notes";
@@ -79,7 +79,7 @@
 				on:ionInput={(event) => {newtask = event.detail.value}}
 			>
 			</ion-input>
-			<ion-button on:click = {tasks = [...tasks,newtask];} }>
+			<ion-button on:click = {()=> tasks = [...tasks,newtask];} }>
 				Add 
 			</ion-button>
 			<ion-list>
@@ -100,4 +100,4 @@
 			This is a footer!
 		</ion-label>
 	</ion-toolbar>
-</ion-footer>
+</ion-footer>)

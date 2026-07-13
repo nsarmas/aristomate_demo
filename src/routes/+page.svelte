@@ -41,17 +41,16 @@
 
 	$: remaining = todos.filter((t) => !t.done).length;
 
-	// ================= Grades demo: real data via universisFetch =================
-	// Shows: ion-spinner, async fetch, ion-list rendering, error state.
+	// ================= Grades demo =================
 	let grades: any[] = [];
 	let loadingGrades = false;
 	let gradesError = '';
 	let gradesLoaded = false;
+	let graduationGrade = undefined;
 
 	function courseTitle(g: any): string {
 		return g?.course?.title ?? g?.course?.name ?? g?.courseTitle ?? 'Unknown course';
 	}
-
 
 	function gradeColor(value: number | null): string {
 		if (value === null) return 'medium';
@@ -59,8 +58,8 @@
 		if (value < 6.5) return 'warning';
 		return 'success';
 	}
-	
-	$: average = (() => {
+
+	$: average = graduationGrade ?? (() => {
 		const values = grades.map((g) => g.formattedGrade).filter((v): v is number => v !== null);
 		if (!values.length) return null;
 		return values.reduce((a, b) => a + b, 0) / values.length;
@@ -70,8 +69,12 @@
 		loadingGrades = true;
 		gradesError = '';
 		try {
+			graduationGrade = (await universisFetch('students/me')).graduationGrade;
+			console.log('Graduation grade:', graduationGrade);
+
 			const result = await universisFetch('students/me/courses');
-			console.log(result.value);
+			// console.log(result.value);
+			
 			grades = Array.isArray(result) ? result : (result?.value ?? []);
 
 			grades.forEach((g) => {g.formattedGrade = typeof g.formattedGrade === 'string' ? parseFloat(g.formattedGrade) : g.formattedGrade;});
@@ -160,8 +163,7 @@
 				<ion-card-title>My grades</ion-card-title>
 			</ion-card-header>
 			<ion-card-content>
-				Fetches real data through <code>universisFetch</code>, using the token configured in
-				<code>.env</code>.
+				Fetches data through universis api.
 			</ion-card-content>
 			<ion-item lines="none">
 				<ion-button slot="end" on:click={loadGrades} disabled={loadingGrades} aria-hidden>
